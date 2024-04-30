@@ -1,0 +1,32 @@
+count 0 n 1
+code segment
+assume cs:code
+
+start:
+    mov al, 85h    ; Initialize AL with 85h
+    mov cl, 08h    ; Initialize CL with 08h
+    xor bx, bx     ; Clear BX
+
+l1:
+    rcr al, 01h    ; Rotate AL right through carry
+    jc l2          ; Jump if the carry flag is set (i.e., the LSB was 1)
+
+    inc bh         ; Increment BH (counts the number of 0 bits)
+    dec cl         ; Decrement CL (counts remaining iterations)
+    jnz l1         ; If CL is not zero, continue the loop
+
+    jmp l3         ; If CL becomes zero, jump to l3
+
+l2:
+    inc bl         ; Increment BL (counts the number of 1 bits)
+    dec cl         ; Decrement CL (counts remaining iterations)
+    jnz l1         ; If CL is not zero, continue the loop
+
+l3:
+    ; Your code continues here
+
+    mov ah, 4cH   ; Set AH to 4cH (DOS function to terminate program)
+    int 21H       ; Call DOS interrupt to terminate the program
+
+code ends
+end start
