@@ -1,0 +1,62 @@
+palindrome
+https://www.youtube.com/watch?v=TgV1ELQeJQ4
+
+data segment
+msg1 db 10, 13, 'Enter the string: $'
+msg2 db 10, 13, 'String is palindrome$'
+msg3 db 10, 13, 'Not palindrome$'
+str1 db 50 dup(0)
+data ENDS
+
+code segment
+assume cs:code, ds:data
+start:
+    mov ax, data
+    mov ds, ax
+    LEA dx, msg1   ; Load the address of msg1 into dx
+    mov ah, 09H    ; DOS function to display string
+    int 21H        ; Call DOS interrupt
+
+    lea si, str1   ; Load the address of str1 into si
+    lea di, str1   ; Load the address of str1 into di
+
+    mov ah, 01H    ; DOS function to read character from standard input
+next:
+    int 21H
+    cmp al, 0DH    ; Check if Enter key is pressed
+    je terminate   ; If Enter key is pressed, jump to terminate
+    mov [di], al   ; Store the character in the string buffer
+    inc di         ; Move to the next position in the buffer
+    jmp next       ; Continue reading characters
+
+terminate:
+    mov al, '$'    ; Add '$' terminator at the end of the string
+    mov [di], al   ; Store '$' in the string buffer
+
+dothis:
+    dec di         ; Move di to the last character of the string
+    mov al, [si]   ; Load character from beginning of string
+    cmp [di], al   ; Compare characters
+    jne notpalindrome
+
+    inc si         ; Move to the next character
+    cmp si, di     ; Check if si has reached di
+    jl dothis      ; If not, continue comparison
+
+palindrome:
+    mov ah, 09H    ; DOS function to display string
+    lea dx, msg2   ; Load the address of msg2 into dx
+    int 21H        ; Call DOS interrupt
+    jmp xx         ; Jump to exit
+
+notpalindrome:
+    mov ah, 09H    ; DOS function to display string
+    lea dx, msg3   ; Load the address of msg3 into dx
+    int 21H        ; Call DOS interrupt
+
+xx:
+    mov ah, 4cH    ; DOS function to terminate program
+    int 21H        ; Call DOS interrupt
+
+code ENDS
+END start        ; End of program with start as entry point
