@@ -1,0 +1,36 @@
+finbonnaci
+https://www.youtube.com/watch?v=ZfNRsznaTiU&list=PLgwJf8NK-2e46oyHPFbheWya00qju5tD_&index=11
+
+
+data segment
+cnt db 10
+fibo db 10 dup(0)
+
+data ENDS
+
+code segment
+assume cs:code, ds:data
+mov ax, data
+mov ds, ax
+mov al, 00H
+lea si, fibo
+mov [si], al
+inc si
+inc al
+mov [si], al
+mov cl, cnt
+mov ch, 00H
+sub cx, 02H
+l1:
+mov al, [si-1]
+add al, si
+daa
+inc si
+mov [si], al
+loop l1
+
+mov ah, 4cH
+int 21H
+code ENDS
+
+END START
