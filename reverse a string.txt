@@ -1,0 +1,35 @@
+reverse a string
+https://www.youtube.com/watch?v=28gW7lZeKDk&list=PLgwJf8NK-2e46oyHPFbheWya00qju5tD_&index=12
+
+
+data segment
+str1 db 'hello'
+LEN EQU $-str1
+str2 db 20 dup(0)
+
+data ENDS
+
+code segment
+start:
+assume cs:code,ds:data,es:data
+mov ax, data
+mov ds, ax
+mov es, ax
+
+mov si, offset str1
+mov di, offset str2 + ( LEN-1 )
+mov cx, LEN
+
+up:cld ;clear direction flag to autoincrement si register
+lodsb  ;load ax with the character pointed si rester
+std    ;set the dirctn flag to autodecrement di register
+stosb  ;the content of ax is stored at the addres pointer
+loop up
+
+mov ah,4cH
+int 21H
+
+code ENDS
+END start
+
+
