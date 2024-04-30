@@ -1,0 +1,59 @@
+pac-unpac
+https://www.youtube.com/watch?v=7ley98UWvWU
+
+.model small
+.data
+a db 23H 
+.code
+start:
+    mov ax, @data
+    mov ds, ax
+
+    mov al, a
+    and al, 0fh       ; Extract the lower nibble
+
+    mov bl, al        ; Store the lower nibble in bl
+
+    mov al, a
+    and al, 0f0H      ; Extract the upper nibble
+    ror al, 4         ; Rotate the upper nibble to the right by 4 bits
+    mov bh, al        ; Store the rotated upper nibble in bh
+
+    mov ax, bx        ; Combine the upper and lower nibbles into ax
+
+    mov ah, 4Ch
+    int 21h
+END start
+
+
+
+
+
+unpac-pac
+.model small
+.data
+.code
+start:
+    mov ax, @data
+    mov ds, ax
+
+    ; Example unpacked value (01H and 03H)
+    mov ax, 0909H
+
+    ; Rotate the upper nibble of ah to the right by 4 bits
+    mov cl, 4
+    ror ah, cl
+
+    ; Add the lower nibble of al to the upper nibble of ah
+    add ah, al
+
+    ; Clear the upper byte of bx
+    xor bh, bh
+
+    ; Store the packed value in bl
+    mov bl, ah
+
+    ; Terminate the program
+    mov ah, 4Ch
+    int 21h
+end start
